@@ -1,0 +1,14 @@
+name: Clippy check
+author: beni69
+inputs:
+  args:
+    description: Additional args to pass to clippy
+    required: false
+    default: ""
+  token:
+    description: GitHub token to use for posting checks on the API
+    required: true
+
+runs:
+  using: node16
+  main: dist/index.js
