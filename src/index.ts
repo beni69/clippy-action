@@ -42,7 +42,6 @@ if (!(await hasClippy())) {
 const out: Clippy[] = [],
     started_at = new Date().toISOString();
 await exec("cargo-clippy", ["-q", "--message-format=json"], {
-    cwd: "/home/beni/code/rust/cargo-kill",
     listeners: {
         stdout: data =>
             data
