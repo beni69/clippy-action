@@ -63,7 +63,6 @@ await exec("cargo-clippy", ["-q", "--message-format=json"], {
                         });
                 }),
     },
-    outStream: createWriteStream("/dev/null"),
 });
 
 debug(out.toString());
