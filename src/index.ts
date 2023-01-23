@@ -1,8 +1,7 @@
-import { getInput, warning, debug } from "@actions/core";
+import { debug, endGroup, getInput, startGroup, warning } from "@actions/core";
 import { exec } from "@actions/exec";
-import { which } from "@actions/io";
-import { createWriteStream } from "node:fs";
 import { context, getOctokit } from "@actions/github";
+import { which } from "@actions/io";
 
 interface Check {
     name: string;
@@ -41,6 +40,7 @@ if (!(await hasClippy())) {
 
 const out: Clippy[] = [],
     started_at = new Date().toISOString();
+startGroup("clippy");
 await exec("cargo-clippy", ["-q", "--message-format=json"], {
     listeners: {
         stdout: data =>
@@ -64,8 +64,9 @@ await exec("cargo-clippy", ["-q", "--message-format=json"], {
                 }),
     },
 });
+endGroup();
 
-debug(out.toString());
+debug(JSON.stringify(out, null, 2));
 
 const check: Check = {
     name: "clippy",
@@ -84,8 +85,8 @@ const check: Check = {
 };
 
 const octokit = getOctokit(token);
-
-await octokit.request("POST /repos/{owner}/{repo}/check-runs", {
+const res = await octokit.request("POST /repos/{owner}/{repo}/check-runs", {
     ...context.repo,
     ...check,
 });
+debug(JSON.stringify(res, null, 2));
